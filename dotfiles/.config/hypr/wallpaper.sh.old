@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# Configuration
+# Konachan API allows a maximum of 6 tags for guest searches
+TAGS="rating:hentai uncensored illustration explicit anal creampie sex cum bdsm hardcore extreme width:1920.. height:1080.."
+API_URL="https://konachan.com/post.json?tags=$(echo $TAGS | sed 's/ /+/g')&limit=100"
+WALLPAPER_DIR="$HOME/Pictures/Wallpapers"
+mkdir -p "$WALLPAPER_DIR"
+
+# Fetch a random image URL from the first 100 posts matching the criteria
+RESPONSE=$(curl -s "$API_URL")
+IMAGE_URL=$(echo "$RESPONSE" | jq -r 'if type=="array" then .[].file_url else empty end' | shuf -n 1)
+
+if [ -n "$IMAGE_URL" ] && [ "$IMAGE_URL" != "null" ]; then
+    # Extract filename from URL to save specifically
+    FILE_NAME=$(basename "$IMAGE_URL")
+    WALLPAPER_PATH="$WALLPAPER_DIR/$FILE_NAME"
+    
+    # Download the image
+    curl -s -o "$WALLPAPER_PATH" "$IMAGE_URL"
+    
+    # Kill any existing swaybg or wbg processes
+    killall swaybg wbg 2>/dev/null
+    
+    # Set the wallpaper using swaybg
+    swaybg -i "$WALLPAPER_PATH" -m fill &
+    
+    # Optional: symlink to "current_wallpaper.jpg" for easy reference
+    ln -sf "$WALLPAPER_PATH" "$WALLPAPER_DIR/current_wallpaper.jpg"
+else
+    echo "Failed to fetch wallpaper. API response was:"
+    echo "$RESPONSE" | head -c 200
+    # Fallback to a static wallpaper if the fetch fails
+    swaybg -i ~/void_wall.png -m fill &
+fi

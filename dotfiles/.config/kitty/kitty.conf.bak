@@ -1,0 +1,29 @@
+#window look
+
+background_opacity 0.55
+dynamic_background_opacity yes
+window_padding_width 10
+
+#colors
+# background #000000
+# foreground #dcdcdc
+# cursor #00ff00
+# selection_background #224422
+
+# text and ui
+font_family	monospace
+font_size	12.0
+scrollback_lines 2000
+mouse_hide_wait 3.0
+
+# performace for 17in alienware screen
+repaint_delay	8
+input_delay	3
+sync_to_monitor	yes
+
+
+
+# BEGIN_KITTY_THEME
+# 1984 Light
+include current-theme.conf
+# END_KITTY_THEME

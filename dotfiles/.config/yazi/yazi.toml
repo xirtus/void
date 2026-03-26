@@ -1,0 +1,30 @@
+[manager]
+show_hidden = false
+show_symlink = true
+scrolloff = 5
+
+[opener]
+edit = [
+	{ run = 'nano "$@"', block = true, desc = "Edit with nano" },
+]
+play = [
+	{ run = 'mpv "$@"', orphan = true, desc = "Play with mpv" },
+]
+display = [
+	{ run = 'mpv "$@"', orphan = true, desc = "Display with mpv" },
+]
+
+[open]
+rules = [
+	{ name = "*.{jpg,jpeg,png,gif,webp,bmp}", use = "display" },
+	{ name = "*.{mp4,mkv,avi,mov,webm,flv}", use = "play" },
+	{ name = "*.pdf", use = "play" },
+	{ mime = "text/*", use = "edit" },
+]
+
+[preview]
+max_width = 600
+max_height = 900
+cache_dir = ""
+ueberzug_scale = 1
+ueberzug_offset = [ 0, 0, 0, 0 ]
