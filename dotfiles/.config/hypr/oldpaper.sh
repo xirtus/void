@@ -2,7 +2,7 @@
 
 # Configuration
 # Konachan API allows a maximum of 6 tags for guest searches
-TAGS="rating:uncensored anal loli sex cum pussy width:1920.. height:1080.."
+TAGS="rating: width:1920.. height:1080.."
 API_URL="https://konachan.com/post.json?tags=$(echo $TAGS | sed 's/ /+/g')&limit=100"
 WALLPAPER_DIR="$HOME/Pictures/Wallpapers"
 mkdir -p "$WALLPAPER_DIR"
