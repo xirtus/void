@@ -9,11 +9,7 @@ INTERVAL=3600   # 60 minutes
 
 while true; do
     # === 5 different safe 6-tag presets ===
-    PRESET1="rating:explicit uncensored flat_chest width:1920.. height:1080.."
-    PRESET2="rating:explicit uncensored crying bondage width:1920.. height:1080.."
-    PRESET3="rating:explicit uncensored cum dildo width:1920.. height:1080.."
-    PRESET4="rating:explicit uncensored anus pussy width:1920.. height:1080.."
-    PRESET5="rating:explicit uncensored fellatio wet width:1920.. height:1080.."
+    PRESET1="
 
     # Randomly pick one
     CHOSEN_PRESET=$((RANDOM % 5 + 1))
