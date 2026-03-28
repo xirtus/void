@@ -1,0 +1,11 @@
+#!/bin/bash
+# Runit service for daily Void Linux system backups
+# Runs backup once daily
+
+exec 2>&1
+
+# Run backup immediately
+/home/xirtus_void/backup-void-system.sh
+
+# Then sleep for 24 hours before runit restarts this service
+sleep 86400

@@ -1,0 +1,48 @@
+# ALSA Configuration for Tiger Lake Audio Duplex (SOF + HDA)
+# This enables proper routing for internal audio (speakers + mic) + headset jack
+
+defaults.pcm.!default {
+    type asym
+    playback.pcm "speakers"
+    capture.pcm "internal_mic"
+}
+
+# ===== PLAYBACK DEVICES =====
+pcm.speakers {
+    type hw
+    card sofhdadsp
+    device 0
+}
+
+pcm.headphone {
+    type hw
+    card sofhdadsp
+    device 1
+}
+
+pcm.hdmi {
+    type hw
+    card NVidia
+    device 3
+}
+
+# ===== CAPTURE DEVICES =====
+pcm.internal_mic {
+    type hw
+    card sofhdadsp
+    device 0
+}
+
+pcm.headset_mic {
+    type hw
+    card sofhdadsp
+    device 1
+}
+
+# ===== MIXER =====
+ctl.!default {
+    type hw
+    card sofhdadsp
+}
+
+# Debug: List devices with: cat /proc/asound/card1/stream*

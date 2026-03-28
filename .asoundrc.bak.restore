@@ -1,0 +1,35 @@
+# Tiger Lake Audio Configuration - Route to SOF HDA Analog Device
+
+defaults.pcm.card 1
+defaults.pcm.device 0
+defaults.ctl.card 1
+
+# Direct mapping to HDA Analog (playback)
+pcm.!default {
+    type asym
+    playback.pcm "speaker"
+    capture.pcm "mic"
+}
+
+pcm.speaker {
+    type plug
+    slave {
+        pcm "hw:1,0"
+        format S16_LE
+        rate 48000
+    }
+}
+
+pcm.mic {
+    type plug
+    slave {
+        pcm "hw:1,0"
+        format S16_LE
+        rate 48000
+    }
+}
+
+ctl.!default {
+    type hw
+    card 1
+}

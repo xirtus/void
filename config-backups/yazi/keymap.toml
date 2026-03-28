@@ -1,0 +1,17 @@
+[manager]
+keymap = [
+	{ on = [ "H" ], run = "cd ~", desc = "Go to home" },
+	{ on = [ "g", "r" ], run = "cd /ROMS", desc = "Go to ROMS" },
+	{ on = [ "g", "d" ], run = "cd ~/Downloads", desc = "Go to Downloads" },
+	{ on = [ "g", "v" ], run = "cd ~/void-packages", desc = "Go to void-packages" },
+	{ on = [ "M" ], run = "shell 'udevil mount /dev/sdb1' --confirm", desc = "Mount drive" },
+	{ on = [ "." ], run = "hidden toggle", desc = "Toggle hidden files" },
+	
+	# Yankee and Cut (requested style)
+	{ on = [ "y", "y" ], run = "yank", desc = "Yank (copy) selected files" },
+	{ on = [ "d", "d" ], run = "yank --cut", desc = "Cut selected files" },
+	
+	# Custom open
+	{ on = [ "O" ], run = "open --reveal", desc = "Open in GUI (Dolphin)" },
+	{ on = [ "o" ], run = "open", desc = "Open with default" },
+]

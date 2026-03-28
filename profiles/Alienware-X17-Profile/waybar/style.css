@@ -1,0 +1,35 @@
+@define-color teal #94e2d5;
+@define-color blue #89b4fa;
+@define-color red  #f38ba8;
+@define-color bg   #1e1e2e;
+
+* {
+    font-family: "JetBrainsMono Nerd Font";
+    font-size: 13px;
+}
+
+window#waybar {
+    background-color: rgba(30, 30, 46, 0.5); /* Semi-transparent */
+    border-bottom: 3px solid @blue;
+    color: #cdd6f4;
+}
+
+#workspaces button {
+    padding: 0 5px;
+    background-color: transparent;
+    color: @blue;
+}
+
+#workspaces button.focused {
+    color: @bg;
+    background-color: @blue;
+    border-radius: 10px;
+}
+
+#clock, #battery, #cpu, #memory {
+    padding: 0 10px;
+    margin: 4px;
+    border-radius: 8px;
+    background-color: @teal;
+    color: @bg;
+}

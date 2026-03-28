@@ -1,0 +1,88 @@
+# Large folders
+void-mklive/
+void-packages/
+temp-ppsspp/
+temp-void/
+node_modules/
+xbps-cachedir-x86_64/
+.cache/
+.npm/
+.npm-global/
+.local/
+.cargo/
+.dotnet/
+.nvm/
+.bun/
+
+# Media
+Downloads/
+Pictures/
+Videos/
+Music/
+Desktop/
+
+# Large apps/emulators
+rpcs3/
+ryujinx/
+duckstation/
+Bottles-63.0/
+Applications/
+
+# Development folders
+go/
+gurk-rs/
+electron/
+interface/
+src/
+challenges/
+Documents/
+
+# Caches and build
+iso_build.log
+iso_overlay/
+*.log
+*.patch
+all_pkgs.txt
+available_pkg_names.txt
+installed_packages.txt
+pkgs.txt
+pkgs_filtered.txt
+local_avail.txt
+excluded_pkgs.log
+filter_pkgs.sh
+BACKUP-USAGE.md
+backup-system.sh
+make_restore_iso.sh
+restore-system.sh
+
+# System/sensitive
+.copilot/
+.pki/
+.dbus/
+.gnupg/
+.ssh/
+.nv/
+.openclaw/
+.oh-my-zsh/
+.grok/
+.gemini/
+.steam/
+.electron-gyp/
+.speedtest-tui/
+.claude/
+.steampid
+.steampath
+
+# Shell history
+.bash_history
+.zsh_history
+.zcompdump*
+
+# Misc
+*.swp
+*.swo
+*~
+.DS_Store
+.wget-hsts
+.p10k.zsh
+.shell.pre-oh-my-zsh
