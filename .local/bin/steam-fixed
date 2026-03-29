@@ -1,0 +1,86 @@
+#!/bin/bash
+# Steam launcher wrapper for Void Linux + Hyprland + Wayland
+# 
+# PROBLEMS SOLVED:
+# 1. SDL_Init failed: wayland not available - Container couldn't access Wayland
+# 2. Games not appearing - Windows launching on different workspaces
+#
+# SOLUTIONS:
+# - Force X11 backend via Xwayland (transparent bridge to Wayland)
+# - Configure GPU drivers for container access
+# - Manage DBus for Steam runtime
+# - Monitor and focus game windows via Hyprland integration
+
+# 1. Ensure system DBus is running (Steam runtime needs this)
+if ! pgrep -x dbus-daemon > /dev/null; then
+    echo "Starting system DBus..."
+    dbus-daemon --system &
+    sleep 1
+fi
+
+# 2. Initialize session DBus if not already running  
+if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
+    echo "Starting session DBus..."
+    dbus-launch --sh-syntax > /tmp/dbus-env.sh
+    source /tmp/dbus-env.sh
+fi
+
+# 3. CRITICAL: Tell Steam runtime to NOT try to launch dbus
+# This prevents conflicts with our explicitly started DBus
+export STEAM_RUNTIME_DISABLE_DBUS_LAUNCH=1
+
+# 4. Pass the system DBus address to the container
+# Steam's Pressure Vessel container needs to know where the system bus is
+export DBUS_SYSTEM_BUS_ADDRESS=unix:path=/run/dbus/system_bus_socket
+
+# 5. GPU settings - NVIDIA driver exposure to container
+# These ensure games can access GPU resources in the restricted container
+export __GLX_VENDOR_LIBRARY_NAME=nvidia     # Use NVIDIA OpenGL implementation
+export LIBVA_DRIVER_NAME=nvidia             # Hardware video acceleration
+export GBM_BACKEND=nvidia-drm               # GPU memory via DRM
+
+# 6. Proton/Wine/DXVK settings for DirectX games
+# Use OpenGL instead of Vulkan for better container compatibility
+export DXVK_BACKEND=opengl
+export PROTON_USE_WINED3D11=1
+
+# 7. Use X11 backend via Xwayland - CRITICAL FIX for Wayland crash
+# Problem: Steam container tried direct Wayland access → SDL_Init failed
+# Solution: Use X11 (via Xwayland) which is compatible with Wayland
+# Xwayland transparently bridges X11 apps to the Wayland compositor
+export SDL_VIDEODRIVER=x11                  # X11 backend instead of Wayland
+export QT_QPA_PLATFORM=xcb                  # Qt uses X11 protocol
+export DISPLAY=:0                           # X11 display server (Xwayland)
+
+# 8. Steam Runtime environment - prefer host libraries for better compatibility
+export STEAM_RUNTIME_PREFER_HOST_LIBRARIES=1
+
+# 9. Hyprland window management - Fix for games appearing on wrong workspace
+# Problem: Games launched but appeared on different workspaces (invisible to user)
+# Solution: Background daemon monitors new windows and focuses them
+(
+  while sleep 0.5; do
+    # Get all non-steam windows currently open in Hyprland
+    WINDOWS=$(hyprctl clients -j 2>/dev/null | grep -o '"class":"[^"]*"' | cut -d'"' -f4 | sort -u)
+    for window in $WINDOWS; do
+      case "$window" in
+        steam|steamwebhelper|Hyprland|"") 
+          # Skip Steam's own windows
+          continue ;;
+        *)
+          # Found a game window - ensure it has focus on current workspace
+          # This brings the game to the foreground automatically
+          hyprctl dispatch focuswindow "class:$window" 2>/dev/null || true
+          break
+          ;;
+      esac
+    done
+  done
+) &
+HYPR_MANAGER_PID=$!
+
+# Cleanup background process when Steam exits
+trap "kill $HYPR_MANAGER_PID 2>/dev/null" EXIT
+
+# 10. Launch Steam with all the above configuration
+exec /home/xirtus_void/.local/share/Steam/steam.sh "$@"
