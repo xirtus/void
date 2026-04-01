@@ -1,0 +1,14 @@
+# Template file for 'bubblewrap'
+pkgname=bubblewrap
+version=0.11.1
+revision=1
+build_style=meson
+hostmakedepends="libxslt docbook-xsl pkg-config"
+makedepends="libcap-devel"
+short_desc="Unprivileged sandboxing tool"
+maintainer="Duncaen <duncaen@voidlinux.org>"
+license="LGPL-2.0-or-later"
+homepage="https://github.com/containers/bubblewrap"
+changelog="https://github.com/containers/bubblewrap/releases"
+distfiles="https://github.com/containers/bubblewrap/releases/download/v${version}/bubblewrap-${version}.tar.xz"
+checksum=c1b7455a1283b1295879a46d5f001dfd088c0bb0f238abb5e128b3583a246f71
