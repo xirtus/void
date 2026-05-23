@@ -5,9 +5,11 @@ export XCURSOR_SIZE=24
 export XCURSOR_THEME=Adwaita
 export QT_QPA_PLATFORMTHEME=kde
 dbus-update-activation-environment --all WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_DESKTOP XDG_SESSION_TYPE &
-riverctl spawn "pipewire"
-riverctl spawn "waybar -c ~/.config/waybar/river_config.jsonc"
-riverctl spawn "xwallpaper"
+echo 1 > /tmp/river_current_tag
+pgrep -x pipewire >/dev/null || riverctl spawn "pipewire"
+pgrep -x waybar >/dev/null || riverctl spawn "waybar -c ~/.config/waybar/river_config.jsonc"
+pgrep -x xwallpaper >/dev/null || riverctl spawn "xwallpaper"
+pgrep -f "libinput-gestures$" >/dev/null || riverctl spawn "libinput-gestures"
 
 # --- Audio: Alienware x17 R1 ALSA/amixer Fixes ---
 # Force 'Input Source' to 'Headset Mic' and enable capture
@@ -32,6 +34,18 @@ riverctl background-color 0x1a1a1a
 # --- Keyboard Settings ---
 riverctl set-repeat 50 300
 
+# --- Touchpad Settings ---
+# Device names include vendor/product IDs, so match the advertised name.
+for touchpad in '*Touchpad*' '*touchpad*'
+do
+    riverctl input "$touchpad" tap enabled
+    riverctl input "$touchpad" tap-button-map left-right-middle
+    riverctl input "$touchpad" click-method clickfinger
+    riverctl input "$touchpad" scroll-method two-finger
+    riverctl input "$touchpad" natural-scroll enabled
+    riverctl input "$touchpad" disable-while-typing enabled
+done
+
 # --- Keybindings: Essentials ---
 riverctl map normal Super Q close
 riverctl map normal Super Return spawn /usr/bin/kitty
@@ -41,11 +55,12 @@ riverctl map normal Super V toggle-float
 riverctl map normal Super F toggle-fullscreen
 riverctl map normal Super Space spawn fuzzel
 riverctl map normal Super R spawn fuzzel
+riverctl map normal Super Tab spawn "/home/xirtus_void/.config/river/toggle_overview.sh toggle"
 
 # --- Keybindings: Apps ---
-riverctl map normal Super B spawn "brave --ozone-platform-hint=auto --enable-features=WaylandWindowDecorations,WebRTCPipeWireCapturer --disable-gpu-sandbox --ignore-gpu-blocklist --enable-gpu-rasterization --enable-zero-copy"
+riverctl map normal Super B spawn "brave --ozone-platform-hint=auto --enable-features=WaylandWindowDecorations,WebRTCPipeWireCapturer --ignore-gpu-blocklist --enable-gpu-rasterization --enable-zero-copy"
 riverctl map normal Super G spawn "kitty -e env PATH='/home/xirtus_void/.bun/bin:$PATH' /home/xirtus_void/node_modules/.bin/grok"
-riverctl map normal Super Y spawn "kitty -e zsh -c 'y'"
+riverctl map normal Super Y spawn "kitty -e zsh -i -c 'y'"
 riverctl map normal Super S spawn 'nohup steam >/dev/null 2>&1 & disown'
 
 # --- Keybindings: Waybar & Screenshots ---
@@ -89,7 +104,7 @@ riverctl map normal Super+Alt Down resize vertical 40
 for i in $(seq 1 9)
 do
     tags=$((1 << ($i - 1)))
-    riverctl map normal Super $i set-focused-tags $tags
+    riverctl map normal Super $i spawn "echo $i > /tmp/river_current_tag; riverctl set-focused-tags $tags"
     riverctl map normal Super+Shift $i set-view-tags $tags
     riverctl map normal Super+Control $i toggle-focused-tags $tags
     riverctl map normal Super+Shift+Control $i toggle-view-tags $tags
