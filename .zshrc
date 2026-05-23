@@ -70,3 +70,8 @@ export NVM_DIR="$HOME/.nvm"
 # OpenClaw Completion
 source "/home/xirtus_void/.openclaw/completions/openclaw.zsh"
 alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+export PATH="$HOME/.local/bin:$PATH"
+
+
+# Added by Antigravity CLI installer
+export PATH="/home/xirtus_void/.local/bin:$PATH"
